@@ -140,22 +140,21 @@ if __name__ == '__main__':
     if not np.round(do_at_saturation(t=20, p=760), 1) == 9.1:
         raise ValueError('function', 'do_at_saturation', 'failed')
 
-    # test plot
-    # define input
+    # create a plot showing DO saturation for different DO concentrations
+    # at different temperatures with a constant pressure of 760 torr
+    # * define input
     do_mgl_space = np.linspace(5, 12, 100)
     temperature_DegCelsius_space = np.linspace(0, 30, 100)
     pressure_mmHg = 760
-
-    sats = []
-    dos = []
-    ts = []
+    # * iterate over input space
+    sats, dos, ts = [], [], []
     for do in do_mgl_space:
         for t in temperature_DegCelsius_space:
             sat = do_saturation(do=do, t=t, p=pressure_mmHg)
             sats.append(sat)
             dos.append(do)
             ts.append(t)
-
+    # * plot and add deco
     sc = plt.scatter(
         dos,
         ts,
@@ -164,6 +163,7 @@ if __name__ == '__main__':
     plt.xlabel('DO [mg/l]')
     plt.ylabel('water temperature [$\degree$ C]')
     plt.colorbar(mappable=sc, label='DO saturation [%]')
+    plt.tight_layout()
     plt.show()
 
 
