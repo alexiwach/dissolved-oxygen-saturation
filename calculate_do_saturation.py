@@ -77,17 +77,7 @@ def do_at_saturation(t, p):
     return do_sat * pressure_correction(p=p, t=t)
 
 
-def do_saturation(do, t, p):
-    """
-    This function calculates DO saturation in percent based on water temperature
-    and air pressure
-    :param do: DO concentration in mg/l
-    :param t: temperature in degree Celsius
-    :param p: atmospheric pressure in mmHg or Torr
-    :return: DO saturation in percent
-    """
-
-    do_max = do_at_saturation(t=t, p=p)
+def do_saturation(do, do_max, t, p):
     return (do / do_max) * 100
 
 
@@ -150,7 +140,15 @@ if __name__ == '__main__':
     sats, dos, ts = [], [], []
     for do in do_mgl_space:
         for t in temperature_DegCelsius_space:
-            sat = do_saturation(do=do, t=t, p=pressure_mmHg)
+            sat = do_saturation(
+             do=do,
+             t=t,
+             p=pressure_mmHg,
+             do_max=do_at_saturation(
+              t=t,
+              p=pressure_mmHg
+             )
+            )
             sats.append(sat)
             dos.append(do)
             ts.append(t)
@@ -165,6 +163,3 @@ if __name__ == '__main__':
     plt.colorbar(mappable=sc, label='DO saturation [%]')
     plt.tight_layout()
     plt.show()
-
-
-
